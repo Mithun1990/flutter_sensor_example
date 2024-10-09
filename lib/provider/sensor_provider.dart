@@ -34,6 +34,7 @@ class SensorProvider with ChangeNotifier {
     accelerometerXs.add(FlSpot(xValue, x));
     accelerometerYs.add(FlSpot(yValue, y));
     accelerometerZs.add(FlSpot(zValue, z));
+    //print(accelerometerZs);
     notifyListeners();
   }
 

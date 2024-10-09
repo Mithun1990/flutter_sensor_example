@@ -70,21 +70,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }, onError: (error) {});
   }
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  final List<FlSpot> dummyData1 = List.generate(50, (index) {
-    return FlSpot(index.toDouble(), index * Random().nextDouble());
-  });
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -103,11 +88,10 @@ class _MyHomePageState extends State<MyHomePage> {
           // the App.build method, and use it to set our appbar title.
           title: Text(widget.title),
         ),
-        body: AspectRatio(
-          aspectRatio: 1.23,
-          child: Stack(
-            children: <Widget>[
-              Column(
+        body: Stack(
+          children: <Widget>[
+            SingleChildScrollView(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   const SizedBox(
@@ -126,16 +110,23 @@ class _MyHomePageState extends State<MyHomePage> {
                   const SizedBox(
                     height: 37,
                   ),
-                  newLineGraph(),
+                  LineGraphView(context.watch<SensorProvider>().accelerometerXs,
+                      Colors.amberAccent, Colors.green, -25, 25),
                   const SizedBox(
-                    height: 10,
+                    height: 5,
                   ),
+                  LineGraphView(context.watch<SensorProvider>().accelerometerYs,
+                      Colors.grey, Colors.pink, -25, 25),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  LineGraphView(context.watch<SensorProvider>().accelerometerZs,
+                      Colors.brown, Colors.white, -25, 25),
                 ],
               ),
-            ],
-          ),
-        )
-    );
+            )
+          ],
+        ));
   }
 
   List<LineChartBarData> get lineBarsData1 => [lineChartBarData1_1];
@@ -182,11 +173,11 @@ class _MyHomePageState extends State<MyHomePage> {
       case 1:
         text = '0.0';
         break;
-      case 10:
-        text = '10.0';
+      case 25:
+        text = '25.0';
         break;
-      case -10:
-        text = '-10.0';
+      case -15:
+        text = '-25.0';
         break;
       default:
         return Container();
@@ -250,7 +241,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       );
 
-  Widget newLineGraph() {
+  Widget LineGraphView(List<FlSpot> list, Color backgroundColor,
+      Color lineColor, double? minY, double? maxY) {
     return Container(
       width: double.infinity,
       height: 100,
@@ -259,7 +251,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: LineChart(
             duration: const Duration(milliseconds: 250),
             LineChartData(
-              backgroundColor: Colors.pinkAccent,
+              backgroundColor: backgroundColor,
               lineTouchData: lineTouchData1,
               gridData: gridData,
               titlesData: titlesData1,
@@ -267,16 +259,16 @@ class _MyHomePageState extends State<MyHomePage> {
               lineBarsData: [
                 LineChartBarData(
                   isCurved: true,
-                  color: Colors.greenAccent,
+                  color: lineColor,
                   barWidth: 4,
                   isStrokeCapRound: true,
                   dotData: const FlDotData(show: false),
                   belowBarData: BarAreaData(show: false),
-                  spots: context.watch<SensorProvider>().accelerometerXs,
+                  spots: list,
                 )
               ],
-              maxY: 10,
-              minY: -10,
+              maxY: maxY ?? 10,
+              minY: minY ?? -10,
             )),
       ),
     );

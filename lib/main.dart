@@ -95,7 +95,73 @@ class _MyHomePageState extends State<MyHomePage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   const SizedBox(
-                    height: 37,
+                    height: 15,
+                  ),
+                  const Text(
+                    'GyroScope Data',
+                    style: TextStyle(
+                      color: Colors.amberAccent,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    height: 200,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 6, left: 6),
+                      child: LineChart(
+                          duration: const Duration(milliseconds: 250),
+                          LineChartData(
+                            backgroundColor: Colors.grey,
+                            lineTouchData: lineTouchData1,
+                            gridData: gridData,
+                            titlesData: titlesData1,
+                            borderData: borderData,
+                            lineBarsData: [
+                              LineChartBarData(
+                                isCurved: true,
+                                color: Colors.amber,
+                                barWidth: 4,
+                                isStrokeCapRound: true,
+                                dotData: const FlDotData(show: false),
+                                belowBarData: BarAreaData(show: false),
+                                spots:
+                                    context.watch<SensorProvider>().gyroScopeXs,
+                              ),
+                              LineChartBarData(
+                                isCurved: true,
+                                color: Colors.pink,
+                                barWidth: 4,
+                                isStrokeCapRound: true,
+                                dotData: const FlDotData(show: false),
+                                belowBarData: BarAreaData(show: false),
+                                spots:
+                                context.watch<SensorProvider>().gyroScopeYs,
+                              ),
+                              LineChartBarData(
+                                isCurved: true,
+                                color: Colors.white,
+                                barWidth: 4,
+                                isStrokeCapRound: true,
+                                dotData: const FlDotData(show: false),
+                                belowBarData: BarAreaData(show: false),
+                                spots:
+                                context.watch<SensorProvider>().gyroScopeZs,
+                              )
+                            ],
+                            maxY: 25,
+                            minY: -25,
+                          )),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
                   ),
                   const Text(
                     'Accelerometer Data',
@@ -108,7 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(
-                    height: 37,
+                    height: 15,
                   ),
                   LineGraphView(context.watch<SensorProvider>().accelerometerXs,
                       Colors.amberAccent, Colors.green, -25, 25),
@@ -150,7 +216,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   FlTitlesData get titlesData1 => FlTitlesData(
         bottomTitles: AxisTitles(
-          sideTitles: bottomTitles,
+          sideTitles: SideTitles(showTitles: false),
         ),
         rightTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),

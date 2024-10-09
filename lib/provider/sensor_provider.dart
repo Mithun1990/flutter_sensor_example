@@ -10,12 +10,20 @@ class SensorProvider with ChangeNotifier {
   List<FlSpot> accelerometerXs = <FlSpot>[];
   List<FlSpot> accelerometerYs = <FlSpot>[];
   List<FlSpot> accelerometerZs = <FlSpot>[];
+
   final int LIMIT = 50;
   double xValue = 1;
   double yValue = 1;
   double zValue = 1;
   double step = 0.1;
-  late Timer timer;
+
+  List<FlSpot> gyroScopeXs = <FlSpot>[];
+  List<FlSpot> gyroScopeYs = <FlSpot>[];
+  List<FlSpot> gyroScopeZs = <FlSpot>[];
+
+  double gxValue = 1;
+  double gyValue = 1;
+  double gzValue = 1;
 
   Accelerometer accelerometer = Accelerometer(0, 0, 0);
   GyroScope gyroScope = GyroScope(0, 0, 0);
@@ -43,9 +51,20 @@ class SensorProvider with ChangeNotifier {
   }
 
   void setGyroScopeData(double x, double y, double z) {
-    gyroScope.x = x;
-    gyroScope.y = y;
-    gyroScope.z = x;
+    while (gyroScopeXs.length > LIMIT) {
+      gyroScopeXs.removeAt(0);
+      gyroScopeYs.removeAt(0);
+      gyroScopeZs.removeAt(0);
+    }
+
+    gxValue = gxValue + step;
+    gyValue = gyValue + step;
+    gzValue = gzValue + step;
+
+    gyroScopeXs.add(FlSpot(gxValue, x));
+    gyroScopeYs.add(FlSpot(gyValue, y));
+    gyroScopeZs.add(FlSpot(gzValue, z));
+    //print(accelerometerZs);
     notifyListeners();
   }
 }
